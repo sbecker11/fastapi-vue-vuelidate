@@ -1,4 +1,4 @@
-# Developing a Single Page App with FastAPI and Vue.js
+# Developing a Single Page App with FastAPI and Vue.js and Vuetify
 
 ### Want to learn how to build this?
 
