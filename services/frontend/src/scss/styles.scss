@@ -1,0 +1,105 @@
+.btnSubmit {
+  height: 30px;
+  border: none;
+  background: deepskyblue;
+  color: white;
+  font-family: "Open Sans", sans-serif;
+  padding: 5px 30px;
+  box-sizing: content-box;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+}
+.disabled {
+  opacity: 0.5;
+}
+input {
+  border: none;
+  width: 100%;
+  border-bottom: 2px solid lightgray;
+  border-color: black !important;
+  // margin: 20px auto 8px;
+  position: relative;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  transition: 0.3s;
+  font-size: 16px;
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid deepskyblue;
+  }
+}
+label {
+  margin: 0px;
+  font-size: 1em;
+  font-weight: bold;
+}
+.show-box {
+  align-self: flex-end;
+  height: 30px;
+  opacity: 0.5;
+  button {
+    float: right;
+    background: none;
+    border: none;
+    cursor: pointer;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+ul {
+  li {
+    list-style: none;
+    i {
+      margin-left: -15px;
+      margin-right: 15px;
+    }
+  }
+  .checked {
+    color: red;
+  }
+}
+.short {
+  color: #ff4136;
+}
+.weak {
+  color: orange;
+}
+.fair {
+  color: deepskyblue;
+}
+.excellent {
+  color: limegreen;
+}
+.rg-bar {
+  background-color: lightgray;
+  width: 100%;
+  margin-top: 10px;
+  height: 8px;
+  border-radius: 2px;
+  .highlight {
+    height: 100%;
+    transition: 0.5s;
+    width: 5%;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    background-color: gray;
+  }
+  .bgShort {
+    background-color: #ff4136;
+    width: 15%;
+  }
+  .bgWeak {
+    background-color: orange;
+    width: 40%;
+  }
+  .bgFair {
+    background-color: deepskyblue;
+    width: 60%;
+  }
+  .bgExcellent {
+    background-color: limegreen;
+    width: 100%;
+  }
+}
