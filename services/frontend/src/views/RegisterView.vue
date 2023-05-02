@@ -16,71 +16,73 @@
       </div>
 
       <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
+        <label for="password" class="form-label" style="width:100%">Password 
+          <button style="float:right;margin-bottom=-1em;font-size:small;border-color:#ccc" 
+            @click="showPassword">Show</button>
+        </label>
         <input
           :type="passwordType"
           v-model="user.password"
           name="password"
           class="form-control"
         />
-        <div class="show-box">
-          <button @click="showPassword">Show</button>
+        <div class="password-validation" >
+          <label for="strength" style="margin-top:1em"
+            >Strength<span v-if="!isInitial">: </span>
+            <span
+              v-bind:class="{
+                initial: isInitial,
+                short: isShort,
+                weak: isWeak,
+                fair: isFair,
+                good: isGood,
+                strong: isStrong,
+              }"
+              >{{ passwordStrength }}</span
+            >
+          </label>
+          <div class="rg-bar">
+            <div
+              v-bind:class="{
+                highlight: true,
+                initial: isInitial,
+                bgZero: isInitial,
+                bgShort: isShort,
+                bgWeak: isWeak,
+                bgFair: isFair,
+                bgGood: isGood,
+                bgStrong: isStrong,
+              }"
+            ></div>
+          </div>
+          <ul class="support-text" style="margin-top:1em;">
+            <li v-bind:class="{ checked: isAtLeast8 }">
+              <i v-if="!isAtLeast8">&#10008;</i>
+              <i v-else>&#10004;</i>
+              Password must be at least 8 characters long
+            </li>
+            <li v-bind:class="{ checked: isSpecial }">
+              <i v-if="!isSpecial">&#10008;</i>
+              <i v-else>&#10004;</i>
+              <i class="fas fa-check"></i> Contain a special character
+            </li>
+            <li v-bind:class="{ checked: isCapital }">
+              <i v-if="!isCapital">&#10008;</i>
+              <i v-else>&#10004;</i>
+              <i class="fas fa-check"></i> Contain a capital letter
+            </li>
+            <li v-bind:class="{ checked: isDigit }">
+              <i v-if="!isDigit">&#10008;</i>
+              <i v-else>&#10004;</i>
+              <i class="fas fa-check"></i> Contain a digit
+            </li>
+            <li v-bind:class="{ checked: isStrong }">
+              <i v-if="!isStrong">&#10008;</i>
+              <i v-else>&#10004;</i>
+              <i class="fas fa-check"></i> Be Strong
+            </li>
+          </ul>
         </div>
-        <label for="strength"
-          >Strength<span v-if="!isInitial">: </span>
-          <span
-            v-bind:class="{
-              initial: isInitial,
-              short: isShort,
-              weak: isWeak,
-              fair: isFair,
-              good: isGood,
-              strong: isStrong,
-            }"
-            >{{ passwordStregnth }}</span
-          >
-        </label>
-        <div class="rg-bar">
-          <div
-            v-bind:class="{
-              highlight: true,
-              initial: isInitial,
-              bgShort: isShort,
-              bgWeak: isWeak,
-              bgFair: isFair,
-              bgGood: isGood,
-              bgStrong: isStrong,
-            }"
-          ></div>
-        </div>
-        <p class="support-text">Your password must:</p>
-        <ul class="support-text">
-          <li v-bind:class="{ checked: isAtLeast8 }">
-            <i v-if="!isAtLeast8">&#10008;</i>
-            <i v-else>&#10004;</i>
-            Be at least 8 characters long
-          </li>
-          <li v-bind:class="{ checked: isSpecial }">
-            <i v-if="!isSpecial">&#10008;</i>
-            <i v-else>&#10004;</i>
-            <i class="fas fa-check"></i> Contain a special character
-          </li>
-          <li v-bind:class="{ checked: isDigit }">
-            <i v-if="!isDigit">&#10008;</i>
-            <i v-else>&#10004;</i>
-            <i class="fas fa-check"></i> Contain a digit
-          </li>
-          <li v-bind:class="{ checked: isCapital }">
-            <i v-if="!isCapital">&#10008;</i>
-            <i v-else>&#10004;</i>
-            <i class="fas fa-check"></i> Contain a capital letter
-          </li>
-          <li v-bind:class="{ checked: isStrong }">
-            <i v-if="!isStrong">&#10008;</i>
-            <i v-else>&#10004;</i>
-            <i class="fas fa-check"></i> Be Strong
-          </li>
-        </ul>
       </div>
 
       <div class="mb-3">
@@ -136,33 +138,29 @@ export default defineComponent({
     return { v$: useVuelidate() };
   },
   computed: {
-    // numPoints() {
-    //   points = 0;
-    //   if ( this.isSpecial ) points += 1;
-    //   if ( this.isCapital ) points += 1;
-    //   if (this.isDigit) points += 1;
-    //   if (this.user.password.length >= 12) points += 3;
-    //   else if (this.user.password.length >= 8) points += 2;
-    //   else if (this.user.password.length >= 4) points += 1;
-    //   return points;
-    // },
     isInitial() {
-      return this.user.password.length < 3;
+      return this.user.password.length == 0;
     },
     isShort() {
-      return this.user.password.length >= 3;
+      return this.user.password.length >= 1;
     },
     isWeak() {
-      return this.isAtLeast8 && (!this.isSpecial || !this.isCapital || !this.isDigit);
+      // any one match
+      return  (this.isSpecial || this.isCapital || this.isDigit);
     },
     isFair() {
-      return this.user.password.length >= 8 && this.isSpecial && this.isCapital && this.isDigit;
+      // any two match
+      if (this.isSpecial && this.isCapital) return true;
+      if (this.isSpecial && this.isDigit) return true;
+      if (this.isCapital && this.isDigit) return true;
+      return false;
     },
     isGood() {
-      return this.user.password.length >= 10 && this.isSpecial && this.isCapital && this.isDigit;
+      // all 3 match
+      return this.isSpecial && this.isCapital && this.isDigit;
     },
     isStrong() {
-     return this.user.password.length >= 12 && this.isSpecial && this.isCapital  && this.isDigit;
+     return this.user.password.length >= 8 && this.isSpecial && this.isCapital  && this.isDigit;
     },
     isValid() {
       return this.isFair || this.isStrong;
@@ -185,15 +183,31 @@ export default defineComponent({
       const regex = /[^A-Za-z0-9]/g;
       return this.user.password.match(regex);
     },
-    passwordStregnth() {
+    passwordStrength() {
       let msg = "";
       msg = this.isShort ? "Very Weak" : msg;
       msg = this.isWeak ? "Weak" : msg;
       msg = this.isFair ? "Fair" : msg;
       msg = this.isGood ? "Good" : msg;
       msg = this.isStrong ? "Strong" : msg;
+      console.log("strength: "+ msg);
+      console.log("hasSpecial:" + (this.isSpecial !== null));
+      console.log("hasDigit:" + (this.isDigit != null));
+      console.log("hasCapital:" + (this.isCapital != null));
+      console.log("hasLength:" + this.user.password.length);
       return msg;
     },
+    // passwordPoints() {
+    //   points = 0;
+    //   if ( this.isSpecial !== null ) points += 1;
+    //   if ( this.isCapital  !== null ) points += 1;
+    //   if ( this.isDigit  !== null ) points += 1;
+    //   if (this.user.password.length >= 12) points += 3;
+    //   else if (this.user.password.length >= 8) points += 2;
+    //   else if (this.user.password.length >= 4) points += 1;
+    //   console.log("passwordPoints:" + points)
+    //   return points;
+    // },
   },
   methods: {
     ...mapActions(["register"]),
