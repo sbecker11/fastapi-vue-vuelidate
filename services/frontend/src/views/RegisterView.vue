@@ -25,8 +25,10 @@
           v-model="user.password"
           name="password"
           class="form-control"
+          @focus="toggleIsEditingPasswordOn"
+          @blur="toggleIsEditingPasswordOff"
         />
-        <div class="password-validation" >
+        <div class="password-validation" v-if="isEditingPassword">
           <label for="strength" style="margin-top:1em"
             >Strength<span v-if="!isInitial">: </span>
             <span
@@ -132,6 +134,7 @@ export default defineComponent({
       passwordType: "password",
       passwordModelold: "",
       passwordTypeold: "password",
+      isEditingPassword: "",
     };
   },
   setup() {
@@ -231,6 +234,17 @@ export default defineComponent({
       this.passwordTypeold =
         this.passwordTypeold === "password" ? "text" : "password";
     },
+    toggleIsEditingPasswordOn() {
+      this.isEditingPassword = true;
+      console.log("isEditingPasswordOn: " + this.isEditingPassword)
+    },
+    toggleIsEditingPasswordOff() {
+      console.log("isStrong:" + this.isStrong);
+      if ( this.isStrong ) {
+        this.isEditingPassword = false;
+        console.log("isEditingPasswordOff: " + this.isEditingPassword)
+      }
+    }
   },
   validations() {
     return {
