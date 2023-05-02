@@ -18,7 +18,7 @@
       <div class="mb-3">
         <label for="password" class="form-label" style="width:100%">Password 
           <button style="float:right;margin-bottom=-1em;font-size:small;border-color:#ccc" 
-            @click="showPassword">Show</button>
+            @click="showPassword">{{ this.thePasswordToggleText }}</button>
         </label>
         <input
           :type="passwordType"
@@ -134,6 +134,7 @@ export default defineComponent({
       passwordType: "password",
       passwordModelold: "",
       passwordTypeold: "password",
+      thePasswordToggleText: "Show",
       isEditingPassword: "",
     };
   },
@@ -226,13 +227,19 @@ export default defineComponent({
         }
       }
     },
+    updatePasswordToggleText() {
+      this.thePasswordToggleText =
+        this.passwordType === "password" ? "Show" : "Hide";
+    },
     showPassword() {
       this.passwordType =
         this.passwordType === "password" ? "text" : "password";
+      this.updatePasswordToggleText();
     },
     showPasswordold() {
       this.passwordTypeold =
         this.passwordTypeold === "password" ? "text" : "password";
+      this.updatePasswordToggleText();
     },
     toggleIsEditingPasswordOn() {
       this.isEditingPassword = true;
