@@ -14,19 +14,6 @@
           <strong style="color: red;" >{{ error.$message }}</strong>
         </p>
       </div>
-      <div class="mb-3">
-        <label for="full_name" class="form-label">Full Name:</label>
-        <input
-          type="text"
-          name="full_name"
-          v-model="user.full_name"
-          class="form-control"
-          @focus="v$.user.full_name.$touch()"
-        />
-        <p v-for="error of v$.user.full_name?.$errors" :key="error.$uid">
-          <strong style="color: red;" >{{ error.$message }}</strong>
-        </p>
-      </div>
 
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
@@ -47,7 +34,8 @@
               short: isShort,
               weak: isWeak,
               fair: isFair,
-              excellent: isExcellent,
+              good: isGood,
+              strong: isStrong,
             }"
             >{{ passwordStregnth }}</span
           >
@@ -60,7 +48,8 @@
               bgShort: isShort,
               bgWeak: isWeak,
               bgFair: isFair,
-              bgExcellent: isExcellent,
+              bgGood: isGood,
+              bgStrong: isStrong,
             }"
           ></div>
         </div>
@@ -76,15 +65,20 @@
             <i v-else>&#10004;</i>
             <i class="fas fa-check"></i> Contain a special character
           </li>
+          <li v-bind:class="{ checked: isDigit }">
+            <i v-if="!isDigit">&#10008;</i>
+            <i v-else>&#10004;</i>
+            <i class="fas fa-check"></i> Contain a digit
+          </li>
           <li v-bind:class="{ checked: isCapital }">
             <i v-if="!isCapital">&#10008;</i>
             <i v-else>&#10004;</i>
             <i class="fas fa-check"></i> Contain a capital letter
           </li>
-          <li v-bind:class="{ checked: isExcellent }">
-            <i v-if="!isExcellent">&#10008;</i>
+          <li v-bind:class="{ checked: isStrong }">
+            <i v-if="!isStrong">&#10008;</i>
             <i v-else>&#10004;</i>
-            <i class="fas fa-check"></i> Be excellent
+            <i class="fas fa-check"></i> Be Strong
           </li>
         </ul>
       </div>
@@ -105,7 +99,7 @@
 
       <button
         type="submit"
-        :disabled="!isExcellent || v$.$invalid"
+        :disabled="!isStrong || v$.$invalid"
         class="btn btn-primary"
       >
         Submit
@@ -119,7 +113,7 @@ import { defineComponent, ref } from "vue";
 import { mapActions } from "vuex";
 import PasswordMeter from "vue-simple-password-meter";
 import { useVuelidate } from "@vuelidate/core";
-import { required, sameAs, helpers } from "@vuelidate/validators";
+import { required, minLength, sameAs, helpers } from "@vuelidate/validators";
 
 export default defineComponent({
   name: "Register",
@@ -130,7 +124,6 @@ export default defineComponent({
     return {
       user: {
         username: "",
-        full_name: "",
         password: "",
         confirmPassword: "",
       },
@@ -143,25 +136,43 @@ export default defineComponent({
     return { v$: useVuelidate() };
   },
   computed: {
+    // numPoints() {
+    //   points = 0;
+    //   if ( this.isSpecial ) points += 1;
+    //   if ( this.isCapital ) points += 1;
+    //   if (this.isDigit) points += 1;
+    //   if (this.user.password.length >= 12) points += 3;
+    //   else if (this.user.password.length >= 8) points += 2;
+    //   else if (this.user.password.length >= 4) points += 1;
+    //   return points;
+    // },
     isInitial() {
       return this.user.password.length < 3;
     },
     isShort() {
-      return this.user.password.length >= 3 && !this.isAtLeast8;
+      return this.user.password.length >= 3;
     },
     isWeak() {
-      return this.isAtLeast8 && (!this.isSpecial || !this.isCapital);
+      return this.isAtLeast8 && (!this.isSpecial || !this.isCapital || !this.isDigit);
     },
     isFair() {
-      return this.isAtLeast8 && this.isSpecial && this.isCapital;
+      return this.user.password.length >= 8 && this.isSpecial && this.isCapital && this.isDigit;
     },
-    isExcellent() {
-      return (
-        this.user.password.length >= 12 && this.isSpecial && this.isCapital
-      );
+    isGood() {
+      return this.user.password.length >= 10 && this.isSpecial && this.isCapital && this.isDigit;
+    },
+    isStrong() {
+     return this.user.password.length >= 12 && this.isSpecial && this.isCapital  && this.isDigit;
     },
     isValid() {
-      return this.isFair || this.isExcellent;
+      return this.isFair || this.isStrong;
+    },
+    // noSpaces() {
+    //   return this.user.username.replaceAll(' ','') == this.user.username;
+    // },
+    isDigit() {
+      const regex = /[0-9]/g;
+      return this.user.password.match(regex);
     },
     isCapital() {
       const regex = /[A-Z]/g;
@@ -179,7 +190,8 @@ export default defineComponent({
       msg = this.isShort ? "Very Weak" : msg;
       msg = this.isWeak ? "Weak" : msg;
       msg = this.isFair ? "Fair" : msg;
-      msg = this.isExcellent ? "Strong" : msg;
+      msg = this.isGood ? "Good" : msg;
+      msg = this.isStrong ? "Strong" : msg;
       return msg;
     },
   },
@@ -209,18 +221,20 @@ export default defineComponent({
   validations() {
     return {
       user: {
-        username: { required: helpers.withMessage('Username is required', required) }, 
-        full_name: { required: helpers.withMessage('Full name is required', required) },
+        username: { 
+          required: helpers.withMessage('Username is required', required), 
+          minLength: minLength(3),
+          // noSpaces: helpers.withMessage('Username can have no spaces, noSpaces)
+        }, 
         password: {
           containsPasswordRequirement: helpers.withMessage(
             () =>
-              `The password requires at least 8 characters, 1 uppercase, 1 number, 1 special character, and strength must be strong`,
+              `The password requires at least 8 characters, 1 uppercase, 1 digit, 1 special character, and strength must be strong`,
             (value) =>
               /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/.test(value)
           ),
         },
         confirmPassword: {
-          // required: helpers.withMessage('Must match password', required), sameAsPassword: sameAs(this.user.password)
           required: helpers.withMessage('Must match password', required), sameAsPassword: helpers.withMessage('Must match password', sameAs(this.user.password))
         }        
       },
