@@ -58,29 +58,29 @@
             ></div>
           </div>
           <ul class="support-text" style="margin-top:1em;">
-            <li v-bind:class="{ checked: isAtLeast8 }">
-              <i v-if="!isAtLeast8">&#10008;</i>
-              <i v-else>&#10004;</i>
+            <li>
+              <i v-if="!isAtLeast8" class="error">&#10008;</i>
+              <i v-else class="success">&#10004;</i>
               Password must be at least 8 characters long
             </li>
-            <li v-bind:class="{ checked: isSpecial }">
-              <i v-if="!isSpecial">&#10008;</i>
-              <i v-else>&#10004;</i>
+            <li>
+              <i v-if="!isSpecial" class="error">&#10008;</i>
+              <i v-else class="success">&#10004;</i>
               <i class="fas fa-check"></i> Contain a special character
             </li>
-            <li v-bind:class="{ checked: isCapital }">
-              <i v-if="!isCapital">&#10008;</i>
-              <i v-else>&#10004;</i>
+            <li>
+              <i v-if="!isCapital" class="error">&#10008;</i>
+              <i v-else class="success">&#10004;</i>
               <i class="fas fa-check"></i> Contain a capital letter
             </li>
-            <li v-bind:class="{ checked: isDigit }">
-              <i v-if="!isDigit">&#10008;</i>
-              <i v-else>&#10004;</i>
+            <li>
+              <i v-if="!isDigit" class="error">&#10008;</i>
+              <i v-else class="success">&#10004;</i>
               <i class="fas fa-check"></i> Contain a digit
             </li>
-            <li v-bind:class="{ checked: isStrong }">
-              <i v-if="!isStrong">&#10008;</i>
-              <i v-else>&#10004;</i>
+            <li>
+              <i v-if="!isStrong" class="error">&#10008;</i>
+              <i v-else class="success">&#10004;</i>
               <i class="fas fa-check"></i> Be Strong
             </li>
           </ul>
@@ -169,9 +169,6 @@ export default defineComponent({
     isValid() {
       return this.isFair || this.isStrong;
     },
-    // noSpaces() {
-    //   return this.user.username.replaceAll(' ','') == this.user.username;
-    // },
     isDigit() {
       const regex = /[0-9]/g;
       return this.user.password.match(regex);
@@ -194,24 +191,8 @@ export default defineComponent({
       msg = this.isFair ? "Fair" : msg;
       msg = this.isGood ? "Good" : msg;
       msg = this.isStrong ? "Strong" : msg;
-      console.log("strength: "+ msg);
-      console.log("hasSpecial:" + (this.isSpecial !== null));
-      console.log("hasDigit:" + (this.isDigit != null));
-      console.log("hasCapital:" + (this.isCapital != null));
-      console.log("hasLength:" + this.user.password.length);
       return msg;
     },
-    // passwordPoints() {
-    //   points = 0;
-    //   if ( this.isSpecial !== null ) points += 1;
-    //   if ( this.isCapital  !== null ) points += 1;
-    //   if ( this.isDigit  !== null ) points += 1;
-    //   if (this.user.password.length >= 12) points += 3;
-    //   else if (this.user.password.length >= 8) points += 2;
-    //   else if (this.user.password.length >= 4) points += 1;
-    //   console.log("passwordPoints:" + points)
-    //   return points;
-    // },
   },
   methods: {
     ...mapActions(["register"]),
@@ -259,7 +240,14 @@ export default defineComponent({
         username: { 
           required: helpers.withMessage('Username is required', required), 
           minLength: minLength(3),
-          // noSpaces: helpers.withMessage('Username can have no spaces, noSpaces)
+          containsNoSpaces: helpers.withMessage(
+            () =>
+              `Username can have no spaces`,
+            (value) =>
+              /^(|\S+)$/.test(value)
+            // if value is not blank then is must contain no spaces
+            // value is valie if it is blank or it has no spaces
+          ),
         }, 
         password: {
           containsPasswordRequirement: helpers.withMessage(
@@ -270,7 +258,8 @@ export default defineComponent({
           ),
         },
         confirmPassword: {
-          required: helpers.withMessage('Must match password', required), sameAsPassword: helpers.withMessage('Must match password', sameAs(this.user.password))
+          required: helpers.withMessage('Must match password', required), 
+          sameAsPassword: helpers.withMessage('Must match password', sameAs(this.user.password))
         }        
       },
     };
