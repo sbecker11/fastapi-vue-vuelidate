@@ -17,7 +17,7 @@
 
       <div class="mb-3">
         <label for="password" class="form-label" style="width:100%">Password 
-          <button style="float:right;margin-bottom=-1em;font-size:small;border-color:#ccc" 
+          <button style="float:right;font-size:small;border:none" 
             @click="showPassword">{{ this.thePasswordToggleText }}</button>
         </label>
         <input
