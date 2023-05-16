@@ -1,0 +1,77 @@
+Things left to do
+
+http://localhost:8080/register
+
+Registration page changes:
+
+remove Full name field
+
+set field border to red if it has any unmet rules
+
+on touch, show only unmet rules with red x-mark
+
+if any rule is satisfied while editing, change its red x-mark to a green check-mark
+
+on blur, keep only unmet rules, hide all met rules
+
+
+Username behavior and validation rules:
+
+At least 3 chars required
+
+when field has not been touched - show no validation error
+once field is touched, if any rule is not met, set field border to red and show all unmet rules with red x-mark
+while field has focus, hide all rules and set border to default color as soon as all rules are met
+when field loses focus, any unmet rules remain visible and border remains red
+submit button is disabled if any fields are invalid, that is, has a red border.
+
+whitespace tooltip: "ignoring white spaces"
+field border is red and tooltip shown for a max of 3 seconds when any white spaces are detected 
+	blank_keys = "[ \t]"
+	clean_username = username.replace(blank_keys,"")
+   has_white_spaces = username != clean_username
+remove leading and trailing white spaces on blur
+	username = clean_username
+hide tooltip when whitespaces are stripped
+
+punctuation tooltip: "ignoring punctuation keys"
+field border is red and tooltip shown for a max of 3 seconds when any punctuation key is entered
+	punct_keys = [".",",", ":",";", "(",")","[","]", "{","}", "/","\\","|",  "'", "\""]
+   is_punct_key if key in punct_keys
+immediately hide tooltip when any key is pressed
+Immediately hide tooltip on blur
+
+Note for testing: need to ensure that all other printable unicode chars, including Asian 4E00–9FFF are allowed
+
+Password behavior and validation rules:
+
+strength should be zero when password field is blank
+
+move hide/show button to be an overlay on top of and inside of password input field at far right
+
+password strength rule must be altered to be set to "strong" once these rules are met:
+
+Be at least 8 characters long
+Contains a digit                   << needs to be added
+Contains a special character
+Contains a capital letter
+Password strength must be strong
+
+validation div 
+
+check-marks medium green: #00AA00
+x-marks red #ff0000
+
+
+
+Profile page:
+
+move full name from registration page to a new profile page
+
+profile page fields:
+Full Name, email, phone
+strings are stripped of left and right white space
+my phone regex is
+undefined
+my email regex is 
+^(\D)+[\.\w+]*[(\-\+)\w+]?@\w+(\.\w)*(\.\w{2,})+$

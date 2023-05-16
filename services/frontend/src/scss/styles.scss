@@ -56,7 +56,10 @@ ul {
       margin-right: 15px;
     }
   }
-  .checked {
+  .success {
+    color: green;
+  }
+  .error {
     color: red;
   }
 }
@@ -86,19 +89,27 @@ ul {
     border-bottom-right-radius: 2px;
     background-color: gray;
   }
+  .bgZero {
+    background-color: #ffffff;
+    width: 0%;
+  }
   .bgShort {
     background-color: #ff4136;
-    width: 15%;
+    width: 10%;
   }
   .bgWeak {
     background-color: orange;
-    width: 40%;
+    width: 25%;
   }
   .bgFair {
     background-color: deepskyblue;
-    width: 60%;
+    width: 50%;
   }
-  .bgExcellent {
+  .bgGood {
+    background-color: darkcyan;
+    width: 75%;
+  }
+  .bgStrong {
     background-color: limegreen;
     width: 100%;
   }
