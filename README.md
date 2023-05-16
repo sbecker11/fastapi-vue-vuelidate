@@ -2,7 +2,7 @@
 
 ### The registration page embellished with Vuelidate validation
 
-![registration page](https://shawn.beckerstudio.com/wp-content/uploads/2023/05/fastapi-vue-vuetify-registration-1.png))
+![registration page](https://shawn.beckerstudio.com/wp-content/uploads/2023/05/fastapi-vue-vuetify-registration.png))
 
 ### Want to learn how to build this?
 
