@@ -33,4 +33,4 @@ register_tortoise(app, config=TORTOISE_ORM, generate_schemas=False)
 
 @app.get("/")
 def home():
-    return "Hello, World!"
+    return "FastAPI service is running"
